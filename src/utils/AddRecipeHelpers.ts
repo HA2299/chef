@@ -1,7 +1,7 @@
 // AddRecipeHelpers.ts
-import { type RecipeIngredientType } from '../types/RecipeIngredientType'
-import { UnitType } from '../types/UnitType'
-import { type IngredientType } from '../types/IngredientType';
+import { type RecipeIngredientType } from '../types/recipeIngredient.type'
+import { UnitType } from '../types/unit.type'
+import { type IngredientType } from '../types/ingredient.type';
 
 export const handleIngredientChange = (
     index: number,

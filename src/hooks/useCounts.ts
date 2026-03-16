@@ -58,6 +58,27 @@ const useUserCount = () => {
   return userCount;
 };
 
+const useRecipeRateAverage = () => {
+  const [averageRate, setAverageRate] = useState(0);
+
+  useEffect(() => {
+    const fetchAverageRateCount = async () => {
+      try {
+        const response = await axios.get('https://localhost:7136/api/Recipe/averageRate');
+        setAverageRate(response.data);
+      } catch (error) {
+        console.error("שגיאה בטעינת הדירוג הממוצע:", error);
+      }
+    };
+
+    fetchAverageRateCount();
+  }, []);
+
+  return averageRate;
+};
+
+
+
 const roundAndFormat = (count:number) => {
   const roundedCount = Math.floor(count / 10) * 10; // עיגול כלפי מטה לעשרות
   return `${roundedCount}+`;
@@ -65,4 +86,4 @@ const roundAndFormat = (count:number) => {
 
 
 
-export { useRecipeCount, useChefCount, useUserCount };
+export { useRecipeCount, useChefCount, useUserCount, useRecipeRateAverage};

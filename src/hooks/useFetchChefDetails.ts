@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type{ ChefType } from '../types/ChefType';
+import type{ ChefType } from '../types/chef.type';
 
 const useFetchChefDetails = ( chefId: number|undefined) => {
     const [chef, setChef] = useState<ChefType>();

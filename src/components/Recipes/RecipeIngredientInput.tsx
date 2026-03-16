@@ -1,8 +1,8 @@
 import React from 'react';
-import IngredientSelect from './IngredientSelect';
-import UnitSelect from './UnitSelect';
-import type { RecipeIngredientType } from '../types/RecipeIngredientType';
-import type { IngredientType } from '../types/IngredientType';
+import IngredientSelect from '../IngredientSelect';
+import UnitSelect from '../UnitSelect';
+import type { RecipeIngredientType } from '../../types/recipeIngredient.type';
+import type { IngredientType } from '../../types/ingredient.type';
 
 interface RecipeIngredientInputProps {
     selectedIngredientId:number|null;

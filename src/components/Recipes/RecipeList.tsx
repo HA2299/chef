@@ -1,9 +1,9 @@
-import React, {useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Paths } from '../routes/paths'
+import { Paths } from '../../routes/paths'
 import RecipeCard from './RecipeCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchRecipes, type AppDispatch, type RootState } from '../redux/store';
+import { fetchRecipes, type AppDispatch, type RootState } from '../../redux/store';
 
 const RecipeList: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -31,10 +31,11 @@ const RecipeList: React.FC = () => {
                 return 'easy';
         }
     };
-
     return (
         <div className="min-h-screen bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl font-bold text-gray-800 text-center mb-12">המתכונים שלי</h1>
+            <h1 className="text-5xl font-extrabold text-gray-900 text-center mb-12 shadow-md p-4 rounded-lg bg-gradient-to-r from-orange-400 to-red-500 text-white">
+                :המתכונים
+            </h1>
             <div dir="rtl" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {recipes.map((recipe, index) => {
                     return (
@@ -51,10 +52,10 @@ const RecipeList: React.FC = () => {
                         />
                     );
                 })}
-
             </div>
         </div>
     );
+
 };
 
 export default RecipeList;

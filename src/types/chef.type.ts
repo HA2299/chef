@@ -1,5 +1,5 @@
-import type { RecipeType } from "./RecipeType";
-import type { UserType } from "./UserType";
+import type { RecipeType } from './recipe.type'
+import type { UserType } from "./user.type";
 
 export interface ChefType {
     id: number,

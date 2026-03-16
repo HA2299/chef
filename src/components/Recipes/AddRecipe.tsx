@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import '../styles/AddRecipe.css';
-import CategorySelect from './CategorySelect';
-import useFetchData from '../hooks/useFetchData';
-import type { RecipeIngredientType } from '../types/RecipeIngredientType';
-import type { IngredientType } from '../types/IngredientType';
+import '../../styles/AddRecipe.css'
+import CategorySelect from '../CategorySelect';
+import useFetchData from '../../hooks/useFetchData';
+import type { RecipeIngredientType } from '../../types/recipeIngredient.type';
+import type { IngredientType } from '../../types/ingredient.type';
 import RecipeIngredientInput from './RecipeIngredientInput';
-import { handleIngredientChange, addIngredient, handleSubmit } from '../utils/AddRecipeHelpers';
+import { handleIngredientChange, addIngredient, handleSubmit } from '../../utils/AddRecipeHelpers';
 import { FaClock, FaFire } from 'react-icons/fa';
 
 const Difficulty = { Easy: 0, Normal: 1, Difficult: 2 } as const;

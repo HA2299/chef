@@ -1,17 +1,32 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteRecipe } from '../services/recipeService';
-import { Paths } from '../routes/paths';
-import { useAuthContext } from '../auth/useAuthContext';
+import { deleteRecipe } from '../../services/recipeService';
+import { Paths } from '../../routes/paths';
+import { useAuthContext } from '../../auth/useAuthContext';
 import { Trash2 } from 'lucide-react';
-import useFetchChefRecipes from '../hooks/useFetchChefRecpies';
-import type { RecipeType } from '../types/RecipeType';
+import useFetchChefRecipes from '../../hooks/useFetchChefRecpies';
+import type { RecipeType } from '../../types/recipe.type';
+import React, { type FC } from 'react';
 
-const MyRecipes = () => {
+interface MyRecipesProps {
+    isChef?: boolean;
+    chefId?: number
+}
+
+const MyRecipes: FC<MyRecipesProps> = ({ isChef, chefId = 1 }) => {
+
     const { chefDetails } = useAuthContext();
     const navigate = useNavigate();
     const [recipes, setRecipes] = useState<RecipeType[]>([]);
-    const initialRecipes = useFetchChefRecipes(chefDetails ? chefDetails.id : 1);    
+    let id = 0;
+
+    if (isChef)
+        id = chefDetails ? chefDetails.id : 1
+    else
+        id = chefId
+    console.log(chefId);
+
+    const initialRecipes = useFetchChefRecipes(id);
 
     useEffect(() => {
         if (!initialRecipes.loading && chefDetails) {
@@ -60,19 +75,28 @@ const MyRecipes = () => {
     return (
         <div className="min-h-screen bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
-                <h1 className="text-4xl font-bold text-gray-800 text-center mb-12" dir="rtl">
-                    המתכונים שלי
+                <h1 className="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-yellow-400 to-green-400 text-center mb-12 shadow-lg p-6 rounded-lg"
+                    style={{ animation: 'blink 1s steps(2, start) infinite' }}>
+                    :המתכונים
                 </h1>
+
+
                 {recipes.length === 0 ? (
-                    <div className="text-center text-gray-600" dir="rtl">
-                        <p className="text-xl mb-4">אין לך מתכונים עדיין</p>
-                        <button
-                            onClick={() => navigate(`/${Paths.addRecipe}`)}
-                            className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-3 rounded-full hover:shadow-lg transition-all"
-                        >
-                            הוסף מתכון ראשון
-                        </button>
-                    </div>
+                    isChef ? (
+                        <div className="text-center text-gray-600" dir="rtl">
+                            <p className="text-xl mb-4">אין לך מתכונים עדיין</p>
+                            <button
+                                onClick={() => navigate(`/${Paths.addRecipe}`)}
+                                className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-3 rounded-full hover:shadow-lg transition-all"
+                            >
+                                הוסף מתכון ראשון
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="text-center text-gray-600" dir="rtl">
+                            <p className="text-xl mb-4">אין מתכונים זמינים להצגה</p>
+                        </div>
+                    )
                 ) : (
                     <div dir="rtl" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {recipes.map((recipe) => (
@@ -107,14 +131,16 @@ const MyRecipes = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="absolute top-3 right-3 z-10">
-                                    <button
-                                        onClick={(e) => handleDelete(e, recipe.id ? recipe.id : 1)}
-                                        className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all shadow-lg"
-                                    >
-                                        <Trash2 className="w-5 h-5" />
-                                    </button>
-                                </div>
+                                {isChef && (
+                                    <div className="absolute top-3 right-3 z-10">
+                                        <button
+                                            onClick={(e) => handleDelete(e, recipe.id ? recipe.id : 1)}
+                                            className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all shadow-lg"
+                                        >
+                                            <Trash2 className="w-5 h-5" />
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -122,6 +148,7 @@ const MyRecipes = () => {
             </div>
         </div>
     );
+
 };
 
 export default MyRecipes;

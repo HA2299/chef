@@ -1,17 +1,16 @@
 import { RouterProvider, createBrowserRouter } from 'react-router';
 import { Paths } from './paths';
-import AddRecipe from '../components/AddRecipe'
-import RecipeList from '../components/RecipeList';
-import LoginPage from '../pages/LoginPage';
+import AddRecipe from '../components/Recipes/AddRecipe'
+import RecipeList from '../components/Recipes/RecipeList';
 import HomePage from '../pages/HomePage';
-import RegisterPage from '../pages/RegisterPage';
-import Navbar from '../components/Navbar';
-import RecipeDetail from '../components/RecipeDetail';
-import GenerateRecipe from '../components/AIRecipeGenerator';
-import Chefs from '../components/Chefs';
-import MyRecipes from '../components/MyRecipes';
+import Navbar from '../components/layout/Navbar';
+import RecipeDetail from '../components/Recipes/RecipeDetail';
+import GenerateRecipe from '../components/Recipes/AIRecipeGenerator';
+import Chefs from '../components/Chefs/Chefs';
+import MyRecipes from '../components/Recipes/MyRecipes';
 import SearchPage from '../pages/SearchPage';
 import RatingPage from '../pages/RatingPage';
+import ChefRecipes from '../components/Chefs/ChefRecipes';
 
 const Routes = () => {
   const router = createBrowserRouter([
@@ -30,14 +29,6 @@ const Routes = () => {
         {
           path: Paths.recipeList,
           element: <RecipeList />
-        },
-        {
-          path: Paths.login,
-          element: <LoginPage />
-        },
-        {
-          path: Paths.register,
-          element: <RegisterPage />
         },
         {
           path: Paths.recipeDetail(':recipeId'), // תיקון כאן
@@ -60,9 +51,14 @@ const Routes = () => {
           element: <SearchPage />
         },
         {
-          path: `${Paths.rating}/:recipeId`, // הוסף מסלול לדירוג
-          element: <RatingPage /> // וודא שיש לך רכיב בשם RatingPage
+          path: `${Paths.rating}/:recipeId`,
+          element: <RatingPage /> 
+        },
+        {
+          path: `${Paths.chefRecipes}/:chefId`, 
+          element: <ChefRecipes />
         }
+
       ],
     },
     {

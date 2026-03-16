@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { RecipeIngredientType } from '../types/RecipeIngredientType';
+import type { RecipeIngredientType } from '../types/recipeIngredient.type';
 
 const useFetchRecipeIngredients = (recipeId: number) => {
     const [ingredients, setIngredients] = useState<RecipeIngredientType[]>([]);

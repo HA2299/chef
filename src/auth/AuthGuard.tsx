@@ -2,7 +2,7 @@ import { Navigate } from "react-router"
 import { useAuthContext } from "./useAuthContext"
 import { Paths } from "../routes/paths"
 import type { ReactNode } from "react"
-import type { Role } from '../types/UserType'
+import type { Role } from '../types/user.type'
 
 type Props = {
     children: ReactNode;

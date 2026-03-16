@@ -1,5 +1,5 @@
-import type { IngredientType } from "./IngredientType";
-import { UnitType } from "./UnitType";
+import type { IngredientType } from "./ingredient.type";
+import { UnitType } from "./unit.type";
 
 export interface RecipeIngredientType {
     id?: number,

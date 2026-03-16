@@ -1,5 +1,5 @@
 import React from 'react';
-import type { IngredientType } from '../types/IngredientType';
+import type { IngredientType } from '../types/ingredient.type';
 
 interface IngredientSelectProps {
     selectedIngredientId: number | null;
@@ -12,8 +12,6 @@ interface IngredientSelectProps {
 }
 
 const IngredientSelect: React.FC<IngredientSelectProps> = ({index, availableIngredients, onChange, selectedIngredients,setSelectedIngredientId }) => {
-    // const filteredIngredients = availableIngredients.filter(ing => !selectedIngredients.includes(ing.id));
-
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedId = Number(e.target.value);
         const selectedIngredient = availableIngredients.find(ing => ing.id === selectedId);

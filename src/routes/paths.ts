@@ -8,5 +8,6 @@ export const Paths = {
     chefs: 'chefs',
     myRecipes: 'my-recipes',
     search:'search',
-    rating:'rating'
+    rating:'rating',
+    chefRecipes:'chef-recipes'
 };

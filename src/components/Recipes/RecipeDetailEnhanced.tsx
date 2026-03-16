@@ -1,39 +1,59 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { fetchIngredientsByRecipeId } from '../services/recipeService';
-import type { RecipeIngredientType } from '../types/RecipeIngredientType';
-import { UnitType } from '../types/UnitType';
-import { ChefHat, Clock, Star, Users } from 'lucide-react';
-import StarRating from './StarRating';
-import { getRecipeRatings, getUserRating, rateRecipe } from '../services/ratingService';
-import useFetchChefDetails from '../hooks/useFetchChefDetails';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchRecipes, type AppDispatch, type RootState } from '../redux/store';
+import { useEffect, useState } from 'react';
+import { Clock, Users, ChefHat, Star } from 'lucide-react';
+import StarRating from '../StarRating';
+import { rateRecipe, getUserRating, getRecipeRatings } from '../../services/ratingService'
 
-const getUnitString = (unit: UnitType) => {
-    const units: Record<number, string> = {
-        [UnitType.Grams]: 'גרם',
-        [UnitType.Kilograms]: 'ק"ג',
-        [UnitType.Milliliters]: 'מ"ל',
-        [UnitType.Liters]: 'ליטר',
-        [UnitType.Cups]: 'כוסות',
-        [UnitType.Tablespoons]: 'כפות',
-        [UnitType.Teaspoons]: 'כפיות',
-        [UnitType.Pieces]: 'יחידות'
-    };
-    return units[unit] || '';
-};
+interface RecipeDetailEnhancedProps {
+    recipeId: string;
+    title: string;
+    description: string;
+    instructions: string;
+    preparationTime: number;
+    cookingTime: number;
+    numDoses: number;
+    chefName: string;
+    difficultyLevel: number;
+    ingredients: Array<{
+        id: number;
+        name: string;
+        quantity: number;
+        unit: string;
+    }>;
+}
 
-const RecipeDetail: React.FC = () => {
-    const { recipeId } = useParams<{ recipeId: string }>();
+export default function RecipeDetailEnhanced({
+    recipeId,
+    title,
+    description,
+    instructions,
+    preparationTime,
+    cookingTime,
+    numDoses,
+    chefName,
+    difficultyLevel,
+    ingredients,
+}: RecipeDetailEnhancedProps) {
     const [userRating, setUserRating] = useState(0);
     const [averageRating, setAverageRating] = useState(0);
+    const [totalRatings, setTotalRatings] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
+
+    const difficultyText = ['קל', 'בינוני', 'קשה'];
+    const difficultyColors = [
+        'bg-green-100 text-green-800',
+        'bg-yellow-100 text-yellow-800',
+        'bg-red-100 text-red-800',
+    ];
+
+    useEffect(() => {
+        loadRatings();
+    }, [recipeId]);
+
     const loadRatings = async () => {
         const [userRatingData, recipeRatingsData] = await Promise.all([
-            getUserRating(recipeId ? recipeId : '1'),
-            getRecipeRatings(recipeId ? recipeId : '1'),
+            getUserRating(recipeId),
+            getRecipeRatings(recipeId),
         ]);
 
         if (userRatingData) {
@@ -41,15 +61,17 @@ const RecipeDetail: React.FC = () => {
         }
 
         if (recipeRatingsData) {
-            setAverageRating(recipeRatingsData.rating || 0);
+            setAverageRating(recipeRatingsData.average_rating || 0);
+            setTotalRatings(recipeRatingsData.total_ratings || 0);
         }
     };
+
     const handleRate = async (rating: number) => {
         setIsSubmitting(true);
         setMessage('');
 
         const result = await rateRecipe({
-            recipeId: recipeId ? recipeId : '1',
+            recipeId,
             ratingValue: rating,
         });
 
@@ -65,74 +87,37 @@ const RecipeDetail: React.FC = () => {
         setTimeout(() => setMessage(''), 3000);
     };
 
-
-    const dispatch = useDispatch<AppDispatch>();
-    const recipes = useSelector((state: RootState) => state.recipes.recipes)
-
-    useEffect(() => {
-        dispatch(fetchRecipes());
-    }, [dispatch]);
-
-    const recipe = recipes.find(r => r.id === Number(recipeId));
-    const chefId = recipe?.chefId;
-    const chef = useFetchChefDetails(chefId);
-    const [ingredients, setIngredients] = React.useState<RecipeIngredientType[]>([]);
-
-    React.useEffect(() => {
-        const fetchIngredients = async () => {
-            if (recipe) {
-                const data = await fetchIngredientsByRecipeId(recipe.id ? recipe.id : 1);
-                setIngredients(data);
-            }
-        };
-        fetchIngredients();
-    }, [recipe]);
-
-    const difficultyText = ['קל', 'בינוני', 'קשה'];
-    const difficultyColors = [
-        'bg-green-100 text-green-800',
-        'bg-yellow-100 text-yellow-800',
-        'bg-red-100 text-red-800',
-    ];
-
-    if (!recipe) {
-        return <div className="text-center text-red-500">מתכון לא נמצא</div>;
-    }
-
     return (
         <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 py-12 px-4">
             <div className="max-w-5xl mx-auto">
                 <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
                     <div className="bg-gradient-to-r from-orange-500 to-red-500 p-8 text-white">
-                        <h1 className="text-5xl font-bold mb-4 text-right">{recipe.title}</h1>
-                        <p className="text-xl text-orange-50 mb-6 text-right">{recipe.description}</p>
+                        <h1 className="text-5xl font-bold mb-4 text-right">{title}</h1>
+                        <p className="text-xl text-orange-50 mb-6 text-right">{description}</p>
 
                         <div className="flex items-center justify-between flex-wrap gap-4">
                             <div className="flex items-center gap-6 text-sm">
                                 <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
                                     <Clock className="w-5 h-5" />
-                                    <span>{recipe.preparationTime + recipe.cookingTime} דק׳</span>
+                                    <span>{preparationTime + cookingTime} דק׳</span>
                                 </div>
                                 <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
                                     <Users className="w-5 h-5" />
-                                    <span>{recipe.numDoses} מנות</span>
+                                    <span>{numDoses} מנות</span>
                                 </div>
                                 <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
                                     <ChefHat className="w-5 h-5" />
-                                    <span>{chef.chef?.user.name}</span>
+                                    <span>{chefName}</span>
                                 </div>
                             </div>
 
                             <span
-                                className={`px-4 py-2 rounded-full text-sm font-semibold ${difficultyColors[recipe.difficultyLevel]}`}
+                                className={`px-4 py-2 rounded-full text-sm font-semibold ${difficultyColors[difficultyLevel]}`}
                             >
-                                {difficultyText[recipe.difficultyLevel]}
+                                {difficultyText[difficultyLevel]}
                             </span>
                         </div>
                     </div>
-
-
-
 
                     <div className="p-8">
                         <div className="mb-12 bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-8">
@@ -149,6 +134,9 @@ const RecipeDetail: React.FC = () => {
                                             {averageRating.toFixed(1)}
                                         </span>
                                     </div>
+                                    <p className="text-sm text-gray-500 mt-2">
+                                        ({totalRatings} {totalRatings === 1 ? 'דירוג' : 'דירוגים'})
+                                    </p>
                                 </div>
 
                                 <div className="border-r-2 border-gray-200 h-24 hidden lg:block"></div>
@@ -178,8 +166,7 @@ const RecipeDetail: React.FC = () => {
                             </div>
                         </div>
 
-
-                        <div dir='rtl' className="grid md:grid-cols-2 gap-8 mb-8">
+                        <div className="grid md:grid-cols-2 gap-8 mb-8">
                             <div className="bg-gray-50 rounded-2xl p-6">
                                 <h3 className="text-2xl font-bold text-gray-800 mb-4 text-right flex items-center gap-2">
                                     <span className="text-orange-500">🥘</span>
@@ -191,23 +178,23 @@ const RecipeDetail: React.FC = () => {
                                             key={ing.id}
                                             className="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                                         >
-                                            <span className="font-medium text-gray-800">{ing.ingredient?.name}</span>
+                                            <span className="font-medium text-gray-800">{ing.name}</span>
                                             <span className="text-sm text-gray-600">
-                                                {ing.quantity} {getUnitString(ing.unit)}
+                                                {ing.quantity} {ing.unit}
                                             </span>
                                         </li>
                                     ))}
                                 </ul>
                             </div>
 
-                            <div dir="rtl" className="bg-gray-50 rounded-2xl p-6">
+                            <div className="bg-gray-50 rounded-2xl p-6">
                                 <h3 className="text-2xl font-bold text-gray-800 mb-4 text-right flex items-center gap-2">
                                     <span className="text-orange-500">👨‍🍳</span>
                                     הוראות הכנה
                                 </h3>
                                 <div className="bg-white p-4 rounded-lg shadow-sm">
                                     <p className="text-gray-700 text-right leading-relaxed whitespace-pre-line">
-                                        {recipe.instructions}
+                                        {instructions}
                                     </p>
                                 </div>
                             </div>
@@ -220,4 +207,3 @@ const RecipeDetail: React.FC = () => {
         </div>
     );
 }
-export default RecipeDetail

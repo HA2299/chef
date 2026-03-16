@@ -1,16 +1,17 @@
 import { BookOpen, Users, ChefHat, Star } from 'lucide-react';
-import { useRecipeCount, useChefCount, useUserCount } from '../hooks/useCounts'; // ייבוא ה-Hooks
+import { useRecipeCount, useChefCount, useUserCount, useRecipeRateAverage } from '../../hooks/useCounts'; // ייבוא ה-Hooks
 
 export default function Stats() {
   const recipeCount = useRecipeCount(); // שימוש ב-Hook למתכונים
   const chefCount = useChefCount();     // שימוש ב-Hook לשפים
   const userCount = useUserCount();     // שימוש ב-Hook למשתמשים
+  const averageRate=useRecipeRateAverage();
 
   const stats = [
     { icon: BookOpen, value: recipeCount, label: 'מתכונים', color: 'from-orange-500 to-red-500' },
     { icon: ChefHat, value: chefCount, label: 'שפים מקצועיים', color: 'from-red-500 to-pink-500' },
     { icon: Users, value: userCount, label: 'משתמשים פעילים', color: 'from-pink-500 to-purple-500' },
-    { icon: Star, value: '4.9', label: 'דירוג ממוצע', color: 'from-yellow-500 to-orange-500' },
+    { icon: Star, value: averageRate, label: 'דירוג ממוצע', color: 'from-yellow-500 to-orange-500' },
   ];
 
   return (

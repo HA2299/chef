@@ -1,12 +1,12 @@
 import { Star, BookOpen, Award } from 'lucide-react';
-import { useState } from 'react';
-import useFetchChefRecipes from '../hooks/useFetchChefRecpies';
+import useFetchChefRecipes from '../../hooks/useFetchChefRecpies';
+import { useNavigate } from 'react-router';
+import { Paths } from '../../routes/paths';
 
 interface ChefCardProps {
   name: string;
   avatar: string;
   specialty: string;
-  // recipeCount: number;
   rating: number;
   chefId: number;
 }
@@ -15,12 +15,11 @@ export default function ChefCard({
   name,
   avatar,
   specialty,
-  // recipeCount,
   rating,
   chefId
 }: ChefCardProps) {
-  const [isFollowing, setIsFollowing] = useState(false);
-  const { recipes, loading, error } = useFetchChefRecipes(chefId);
+  const { recipes, loading } = useFetchChefRecipes(chefId);
+  const navigate = useNavigate();
 
   if (loading) {
     return <div>טוען מתכונים...</div>;
@@ -32,7 +31,7 @@ export default function ChefCard({
         <div className="relative mb-4">
           <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-orange-200 group-hover:ring-orange-400 transition-all">
             <img
-          src={`data:image/jpeg;base64,${avatar}`}
+              src={`data:image/jpeg;base64,${avatar}`}
               alt={name}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
@@ -66,13 +65,11 @@ export default function ChefCard({
         </div>
 
         <button
-          onClick={() => setIsFollowing(!isFollowing)}
-          className={`w-full py-2.5 rounded-full font-medium transition-all ${isFollowing
-              ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              : 'bg-gradient-to-r from-orange-500 to-red-500 text-white hover:shadow-lg'
+          onClick={() => navigate(`/${Paths.chefRecipes}/${chefId}`)}
+          className={`w-full py-2.5 rounded-full font-medium transition-all bg-gradient-to-r from-orange-500 to-red-500 text-white hover:shadow-lg
             }`}
         >
-          {isFollowing ? 'עוקב' : 'עקוב'}
+          {'צפה במתכונים שלי'}
         </button>
       </div>
     </div>

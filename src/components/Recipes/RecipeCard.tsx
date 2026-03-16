@@ -1,6 +1,6 @@
 import { Clock, Users, Star, Heart, Bookmark } from 'lucide-react';
 import { useState } from 'react';
-import useFetchChefDetails from '../hooks/useFetchChefDetails';
+import useFetchChefDetails from '../../hooks/useFetchChefDetails';
 
 interface RecipeCardProps {
   chefId:number;

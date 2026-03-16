@@ -1,6 +1,6 @@
 import { configureStore, createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { ChefType } from '../types/ChefType';
-import type { RecipeType } from '../types/RecipeType';
+import type { ChefType } from '../types/chef.type';
+import type { RecipeType } from '../types/recipe.type';
 
 export const fetchChefs = createAsyncThunk('chefs/fetchChefs', async () => {
     const response = await fetch('https://localhost:7136/api/Chef');

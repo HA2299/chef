@@ -1,6 +1,6 @@
-import { createContext, useEffect, useCallback, useState, type ReactNode } from "react";
-import type { UserType } from '../types/UserType';
-import type { ChefType } from "../types/ChefType";
+import { createContext, useEffect, useState, type ReactNode } from "react";
+import type { UserType } from '../types/user.type';
+import type { ChefType } from "../types/chef.type";
 import { getSession, setSession } from './auth.utils';
 import { loginByToken, getChefByUserId } from '../services/auth.services';
 

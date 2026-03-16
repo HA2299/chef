@@ -1,7 +1,7 @@
 import { Clock, ChefHat, TrendingUp, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import type { RecipeType } from '../types/RecipeType';
-import { Paths } from '../routes/paths'
+import type { RecipeType } from '../../types/recipe.type';
+import { Paths } from '../../routes/paths'
 
 interface RecipeSearchCardProps {
   recipe: RecipeType;

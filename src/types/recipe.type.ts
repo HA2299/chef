@@ -1,4 +1,4 @@
-import type { RecipeIngredientType } from "./RecipeIngredientType";
+import type { RecipeIngredientType } from "./recipeIngredient.type";
 
 export interface RecipeType {
     id?:number;

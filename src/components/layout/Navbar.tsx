@@ -3,39 +3,44 @@ import { ChefHat, Search, User, Heart, Menu, X } from 'lucide-react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { Paths } from '../../routes/paths';
 import { useAuthContext } from '../../auth/useAuthContext';
-import LoginModal from '../../auth/LoginModal'
-import RegisterModal from '../../auth/RegisterModal';
+import Login from '../../auth/Login';
+import Register from '../../auth/Register';
+import { useAuthModal } from '../../context/AuthModalContext';
 
+/**
+ * Navbar Component
+ * 
+ * Renders the navigation bar with links, search functionality, and user authentication options.
+ */
 export default function Navbar() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(''); // State for search query
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State for mobile menu visibility
+  const [isSearchOpen, setIsSearchOpen] = useState(false); // State for search input visibility
+  const { openLogin } = useAuthModal(); // Function to open login modal
 
   const navigate = useNavigate();
-  const { chefDetails } = useAuthContext();
+  const { chefDetails, logout } = useAuthContext();
+  const isAdmin = chefDetails && chefDetails.user?.role === 'admin'; // Check if the user is an admin
+  console.log('chefDetails:', chefDetails); // Log chef details for debugging
 
   const addRecipe = () => {
-    navigate(`/${Paths.addRecipe}`);
+    if (chefDetails) {
+      navigate(`/${Paths.addRecipe}`); // Navigate to add recipe page if logged in
+    } else {
+      openLogin(); // Open login modal if not logged in
+    }
   };
-
-  const handleSwitchToRegister = () => {
-    setIsLoginOpen(false);
-    setIsRegisterOpen(true);
-  };
-
-  const handleSwitchToLogin = () => {
-    setIsRegisterOpen(false);
-    setIsLoginOpen(true);
-  };
-
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`${Paths.search}?q=${encodeURIComponent(searchQuery)}`);
+      navigate(`${Paths.search}?q=${encodeURIComponent(searchQuery)}`); // Navigate to search results
     }
+  };
+
+  const handleLogout = async () => {
+    await logout(); // Wait for logout to complete
+    navigate('/'); // Navigate to home page after logout
   };
 
   return (
@@ -67,13 +72,21 @@ export default function Navbar() {
               <a href="#categories" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
                 קטגוריות
               </a>
-              <a href="#about" className="text-gray-700 hover:text-orange-500 transition-colors font-medium mr-6">
+              <a href="#about" className="text-gray-700 hover:text-orange-500 transition-colors font-medium ml-6">
                 אודות
               </a>
               {chefDetails && (
-                <Link to="/my-recipes" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+                <Link to="/my-recipes" className="text-gray-700 hover:text-orange-500 transition-colors font-medium mr-6">
                   המתכונים שלי
                 </Link>
+              )}
+              {isAdmin && ( // Show button for admin
+                <button
+                  onClick={() => navigate('/chef-management')} // Adjust the path as needed
+                  className="text-gray-700 hover:text-orange-500 transition-colors font-medium"
+                >
+                  ניהול שפים
+                </button>
               )}
             </div>
 
@@ -84,15 +97,26 @@ export default function Navbar() {
               >
                 <Search className="w-5 h-5 text-gray-600" />
               </button>
-              <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              {/* <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                 <Heart className="w-5 h-5 text-gray-600" />
-              </button>
-              <button
-                onClick={() => setIsLoginOpen(true)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              >
-                <User className="w-5 h-5 text-gray-600" />
-              </button>
+              </button> */}
+
+              {chefDetails ? (
+                <button
+                  onClick={handleLogout}
+                  className="bg-gray-200 text-orange-600 px-3 py-1 rounded-md hover:bg-orange-500 hover:text-white transition-all text-sm mr-2"
+                >
+                  התנתק
+                </button>
+              ) : (
+                <button
+                  onClick={openLogin}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <User className="w-5 h-5 text-gray-600" />
+                </button>
+              )}
+
               <button
                 onClick={addRecipe}
                 className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all"
@@ -147,17 +171,8 @@ export default function Navbar() {
         )}
       </nav>
 
-      <LoginModal
-        isOpen={isLoginOpen}
-        onClose={() => setIsLoginOpen(false)}
-        onSwitchToRegister={handleSwitchToRegister}
-      />
-      <RegisterModal
-        isOpen={isRegisterOpen}
-        onClose={() => setIsRegisterOpen(false)}
-        onSwitchToLogin={handleSwitchToLogin}
-      />
-
+      <Login />
+      <Register />
       <Outlet />
     </>
   );

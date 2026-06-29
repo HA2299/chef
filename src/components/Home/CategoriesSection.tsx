@@ -1,4 +1,4 @@
-import CategoryCard from "../CategoryCard";
+import CategoryCard from "../common/CategoryCard";
 import { Coffee, Salad, Pizza, Cake, Soup, Cookie } from 'lucide-react';
 
 const CategoriesSection = () => {

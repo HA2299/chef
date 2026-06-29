@@ -3,56 +3,56 @@ import { useNavigate } from 'react-router-dom';
 import { deleteRecipe } from '../../services/recipeService';
 import { Paths } from '../../routes/paths';
 import { useAuthContext } from '../../auth/useAuthContext';
-import { Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import useFetchChefRecipes from '../../hooks/useFetchChefRecpies';
 import type { RecipeType } from '../../types/recipe.type';
 import React, { type FC } from 'react';
 
 interface MyRecipesProps {
-    isChef?: boolean;
-    chefId?: number
+    isChef?: boolean; // Indicates if the user is a chef
+    chefId?: number; // ID of the chef
 }
 
-const MyRecipes: FC<MyRecipesProps> = ({ isChef, chefId = 1 }) => {
+/**
+ * MyRecipes Component
+ * 
+ * Displays a list of recipes for the authenticated chef or a specified chef.
+ * Allows for deleting and editing recipes if the user is a chef.
+ */
+const MyRecipes: FC<MyRecipesProps> = ({ isChef = true, chefId = 1 }) => {
+    const { chefDetails } = useAuthContext(); // Fetch chef details from context
+    const navigate = useNavigate(); // Hook for navigation
+    const [recipes, setRecipes] = useState<RecipeType[]>([]); // State to hold recipes
 
-    const { chefDetails } = useAuthContext();
-    const navigate = useNavigate();
-    const [recipes, setRecipes] = useState<RecipeType[]>([]);
-    let id = 0;
+    let id = isChef ? (chefDetails ? chefDetails.id : 1) : chefId; // Determine chef ID
 
-    if (isChef)
-        id = chefDetails ? chefDetails.id : 1
-    else
-        id = chefId
-    console.log(chefId);
-
-    const initialRecipes = useFetchChefRecipes(id);
+    const initialRecipes = useFetchChefRecipes(id); // Fetch recipes for the chef
 
     useEffect(() => {
-        if (!initialRecipes.loading && chefDetails) {
-            setRecipes(initialRecipes.recipes);
+        if (!initialRecipes.loading) {
+            setRecipes(initialRecipes.recipes); // Update recipes state
         }
     }, [initialRecipes, chefDetails]);
 
     const handleDelete = async (e: React.MouseEvent, id: number) => {
         e.stopPropagation();
-        if (window.confirm('האם אתה בטוח שברצונך למחוק מתכון זה?')) {
+        if (window.confirm('האם אתה בטוח שברצונך למחוק מתכון זה?')) { // Confirm deletion
             try {
-                await deleteRecipe(id);
-                setRecipes((prev) => prev.filter((r) => r.id !== id));
+                await deleteRecipe(id); // Call delete recipe service
+                setRecipes((prev) => prev.filter((r) => r.id !== id)); // Update recipes state
             } catch (err) {
-                alert('שגיאה במחיקה');
+                alert('שגיאה במחיקה'); // Error handling
             }
         }
     };
 
     const handleNavigateToDetail = (recipeId: number) => {
-        navigate(`/${Paths.recipeDetail(recipeId.toString())}`);
+        navigate(`/${Paths.recipeDetail(recipeId.toString())}`); // Navigate to recipe detail
     };
 
     const getDifficultyString = (level: number) => {
-        const levels = ['קל', 'בינוני', 'קשה'];
-        return levels[level] || 'קל';
+        const levels = ['קל', 'בינוני', 'קשה']; // Difficulty levels in Hebrew
+        return levels[level] || 'קל'; // Default to 'קל'
     };
 
     const getDifficultyColor = (level: number) => {
@@ -61,13 +61,13 @@ const MyRecipes: FC<MyRecipesProps> = ({ isChef, chefId = 1 }) => {
             'bg-yellow-100 text-yellow-800',
             'bg-red-100 text-red-800',
         ];
-        return colors[level] || colors[0];
+        return colors[level] || colors[0]; // Default to green
     };
 
     if (initialRecipes.loading) {
         return (
             <div className="min-h-screen bg-gray-50 py-16 px-4">
-                <div className="text-center">טוען...</div>
+                <div className="text-center">טוען...</div> {/* Loading state */}
             </div>
         );
     }
@@ -79,7 +79,6 @@ const MyRecipes: FC<MyRecipesProps> = ({ isChef, chefId = 1 }) => {
                     style={{ animation: 'blink 1s steps(2, start) infinite' }}>
                     :המתכונים
                 </h1>
-
 
                 {recipes.length === 0 ? (
                     isChef ? (
@@ -139,6 +138,12 @@ const MyRecipes: FC<MyRecipesProps> = ({ isChef, chefId = 1 }) => {
                                         >
                                             <Trash2 className="w-5 h-5" />
                                         </button>
+                                        <button
+                                            onClick={() => navigate(`/${Paths.updateRecipe((recipe.id ? recipe.id : 1).toString())}`)}
+                                            className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all shadow-lg"
+                                        >
+                                            <Pencil className="w-5 h-5" /> {/* Edit recipe button */}
+                                        </button>
                                     </div>
                                 )}
                             </div>
@@ -148,7 +153,6 @@ const MyRecipes: FC<MyRecipesProps> = ({ isChef, chefId = 1 }) => {
             </div>
         </div>
     );
-
 };
 
 export default MyRecipes;

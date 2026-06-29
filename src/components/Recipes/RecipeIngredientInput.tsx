@@ -1,6 +1,6 @@
 import React from 'react';
-import IngredientSelect from '../IngredientSelect';
-import UnitSelect from '../UnitSelect';
+import IngredientSelect from '../common/IngredientSelect';
+import UnitSelect from '../common/UnitSelect';
 import type { RecipeIngredientType } from '../../types/recipeIngredient.type';
 import type { IngredientType } from '../../types/ingredient.type';
 

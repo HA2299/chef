@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Clock, Users, ChefHat, Star } from 'lucide-react';
-import StarRating from '../StarRating';
+import StarRating from './StarRating';
 import { rateRecipe, getUserRating, getRecipeRatings } from '../../services/ratingService'
 
 interface RecipeDetailEnhancedProps {

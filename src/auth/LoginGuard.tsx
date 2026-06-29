@@ -14,8 +14,8 @@ const LoginGuard = ({ children }: Props) => {
         return <h1>Loading...</h1>;
     }
 
-    if (isAuthenticated) {
-        return <Navigate to={`/${Paths.addRecipe}`} />;
+    if (!isAuthenticated) {
+        return <Navigate to={`/${Paths.login}`} />;
     }
 
     return <>{children}</>;

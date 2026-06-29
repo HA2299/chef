@@ -10,13 +10,13 @@ type Props = {
 }
 
 const AuthGuard = ({ children, roles }: Props) => {
-    const { isAuthonticated, isInitialized, user } = useAuthContext()
+    const { isAuthenticated, isInitialized, user } = useAuthContext()
 
     if (!isInitialized) {
         return <h1>Loading...</h1>
     }
 
-    if (!isAuthonticated) {
+    if (!isAuthenticated) {
         return <Navigate to={`/${Paths.login}`} />
     }
 

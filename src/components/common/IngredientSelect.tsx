@@ -1,5 +1,5 @@
 import React from 'react';
-import type { IngredientType } from '../types/ingredient.type';
+import type { IngredientType } from '../../types/ingredient.type';
 
 interface IngredientSelectProps {
     selectedIngredientId: number | null;

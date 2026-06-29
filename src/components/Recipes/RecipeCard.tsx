@@ -3,13 +3,13 @@ import { useState } from 'react';
 import useFetchChefDetails from '../../hooks/useFetchChefDetails';
 
 interface RecipeCardProps {
-  chefId:number;
+  chefId: number;
   title: string;
   image: string;
   preparationTime: number;
   numDoses: number;
   difficultyLevel: 'easy' | 'medium' | 'hard';
-  rating:number;
+  rating: number;
   onClick?: () => void;
 }
 
@@ -23,9 +23,9 @@ export default function RecipeCard({
   rating,
   onClick,
 }: RecipeCardProps) {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const chef=useFetchChefDetails(chefId);  
+  // const [isFavorite, setIsFavorite] = useState(false);
+  // const [isBookmarked, setIsBookmarked] = useState(false);
+  const chef = useFetchChefDetails(chefId);
 
   const difficultyColors = {
     easy: 'bg-green-100 text-green-800',
@@ -41,8 +41,7 @@ export default function RecipeCard({
 
   return (
     <div
-      className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer"
-      onClick={onClick}
+      className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
     >
       <div className="relative overflow-hidden h-56">
         <img
@@ -50,15 +49,14 @@ export default function RecipeCard({
           alt={title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
-        <div className="absolute top-3 right-3 flex space-x-2 space-x-reverse">
+        {/* <div className="absolute top-3 right-3 flex space-x-2 space-x-reverse">
           <button
             onClick={(e) => {
               e.stopPropagation();
               setIsFavorite(!isFavorite);
             }}
-            className={`p-2 rounded-full backdrop-blur-sm transition-all ${
-              isFavorite ? 'bg-red-500 text-white' : 'bg-white/80 text-gray-700 hover:bg-white'
-            }`}
+            className={`p-2 rounded-full backdrop-blur-sm transition-all ${isFavorite ? 'bg-red-500 text-white' : 'bg-white/80 text-gray-700 hover:bg-white'
+              }`}
           >
             <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
           </button>
@@ -67,15 +65,15 @@ export default function RecipeCard({
               e.stopPropagation();
               setIsBookmarked(!isBookmarked);
             }}
-            className={`p-2 rounded-full backdrop-blur-sm transition-all ${
-              isBookmarked
+            className={`p-2 rounded-full backdrop-blur-sm transition-all ${isBookmarked
                 ? 'bg-orange-500 text-white'
                 : 'bg-white/80 text-gray-700 hover:bg-white'
-            }`}
+              }`}
           >
             <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-current' : ''}`} />
-          </button>
+          </button> 
         </div>
+         */}
         <div className="absolute bottom-3 left-3">
           <span
             className={`px-3 py-1 rounded-full text-sm font-medium ${difficultyColors[difficultyLevel]}`}
@@ -89,7 +87,7 @@ export default function RecipeCard({
         <h3 className="text-xl font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-orange-500 transition-colors">
           {title}
         </h3>
-        <p className="text-sm text-gray-600 mb-4">מאת {chef.chef?.user.name}</p>
+        <p className="text-sm text-gray-600 mb-4">מאת {chef.chef?.user?.name}</p>
 
         <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
           <div className="flex items-center space-x-1 space-x-reverse">
@@ -108,10 +106,12 @@ export default function RecipeCard({
           </div>
         </div>
 
-        <button className="w-full mt-2 bg-gradient-to-r from-orange-500 to-red-500 text-white py-2.5 rounded-full font-medium hover:shadow-lg transition-all opacity-0 group-hover:opacity-100">
+        <button onClick={onClick}
+          className="w-full mt-2 bg-gradient-to-r from-orange-500 to-red-500 text-white py-2.5 rounded-full font-medium hover:shadow-lg transition-all opacity-0 group-hover:opacity-100">
           צפה במתכון
         </button>
       </div>
+
     </div>
   );
 }

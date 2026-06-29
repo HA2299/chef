@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ChefHat, Search, Sparkles, TrendingUp } from 'lucide-react';
-import { searchRecipes, clearRecipes, type AppDispatch, type RootState } from '../redux/store';
+import {  type AppDispatch, type RootState } from '../redux/store';
+import {searchRecipes} from '../redux/thunks'
+import { clearRecipes } from '../redux/recipesSlice';
 import RecipeSearchCard from '../components/Recipes/RecipeSearchCard';
 
 const SearchPage = () => {

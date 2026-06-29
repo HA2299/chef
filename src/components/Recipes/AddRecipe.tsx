@@ -1,36 +1,45 @@
 import { useState } from 'react';
-import '../../styles/AddRecipe.css'
-import CategorySelect from '../CategorySelect';
+import '../../styles/AddRecipe.css';
+import CategorySelect from '../common/CategorySelect';
 import useFetchData from '../../hooks/useFetchData';
 import type { RecipeIngredientType } from '../../types/recipeIngredient.type';
 import type { IngredientType } from '../../types/ingredient.type';
 import RecipeIngredientInput from './RecipeIngredientInput';
 import { handleIngredientChange, addIngredient, handleSubmit } from '../../utils/AddRecipeHelpers';
 import { FaClock, FaFire } from 'react-icons/fa';
+import { useAuthContext } from '../../auth/useAuthContext';
 
+// Difficulty levels enumeration
 const Difficulty = { Easy: 0, Normal: 1, Difficult: 2 } as const;
 export type DifficultyLevel = typeof Difficulty[keyof typeof Difficulty];
 
+/**
+ * AddRecipe Component
+ * 
+ * A multi-step form for adding a new recipe, including title, ingredients, instructions, 
+ * preparation and cooking time, difficulty level, category selection, and image upload.
+ */
 const AddRecipe = () => {
-  const [step, setStep] = useState(0);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [recipeIngredients, setRecipeIngredients] = useState<RecipeIngredientType[]>([]);
-  const [ingredients, setIngredients] = useState<IngredientType[]>([]);
-  const [instructions, setInstructions] = useState('');
-  const [preparationTime, setPreparationTime] = useState<number>(0);
-  const [cookingTime, setCookingTime] = useState<number>(0);
-  const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel>(Difficulty.Easy);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(1);
-  const [selectedIngredientId, setSelectedIngredientId] = useState<number | null>(null);
-  const [numDoses, setNumDoses] = useState<number>(1);
+  const [step, setStep] = useState(0); // Current step in the form
+  const [title, setTitle] = useState(''); // Recipe title
+  const [description, setDescription] = useState(''); // Recipe description
+  const [recipeIngredients, setRecipeIngredients] = useState<RecipeIngredientType[]>([]); // List of ingredients
+  const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Available ingredients
+  const [instructions, setInstructions] = useState(''); // Cooking instructions
+  const [preparationTime, setPreparationTime] = useState<number>(0); // Preparation time in minutes
+  const [cookingTime, setCookingTime] = useState<number>(0); // Cooking time in minutes
+  const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel>(Difficulty.Easy); // Difficulty level
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number>(1); // Selected category ID
+  const [selectedIngredientId, setSelectedIngredientId] = useState<number | null>(null); // Selected ingredient ID
+  const [numDoses, setNumDoses] = useState<number>(1); // Number of servings
   const [image, setImage] = useState<File | null>(null); // State for image upload
 
-  const { availableIngredients, loading } = useFetchData();
-  if (loading) return <div className="loading">Loading ingredients...</div>;
+  const { availableIngredients, loading } = useFetchData(); // Fetch available ingredients
+  if (loading) return <div className="loading">Loading ingredients...</div>; // Loading state
 
-  const nextStep = () => setStep((prev) => Math.min(prev + 1, 5)); // עדכון כאן ל-5
-  const prevStep = () => setStep((prev) => Math.max(prev - 1, 0));
+  const nextStep = () => setStep((prev) => Math.min(prev + 1, 5)); // Move to the next step
+  const prevStep = () => setStep((prev) => Math.max(prev - 1, 0)); // Move to the previous step
+  const { chefDetails } = useAuthContext(); // Get chef details from context
 
   return (
     <div className="recipe-container">
@@ -55,7 +64,8 @@ const AddRecipe = () => {
             difficultyLevel,
             selectedCategoryId,
             numDoses,
-            image // Include image in submission
+            image,
+            chefDetails ? chefDetails.id : 1 // Default to 1 if no chef details
           )
         }
         className="recipe-form"

@@ -11,6 +11,11 @@ import MyRecipes from '../components/Recipes/MyRecipes';
 import SearchPage from '../pages/SearchPage';
 import RatingPage from '../pages/RatingPage';
 import ChefRecipes from '../components/Chefs/ChefRecipes';
+import Blog from '../pages/Blog';
+import UpdateRecipe from '../pages/updateRecipe';
+import ChefManagement from '../components/Chefs/ChefsManagement';
+import LoginGuard from '../auth/LoginGuard';
+import Login from '../auth/Login'
 
 const Routes = () => {
   const router = createBrowserRouter([
@@ -24,7 +29,7 @@ const Routes = () => {
         },
         {
           path: Paths.addRecipe,
-          element: <AddRecipe />
+          element: <LoginGuard><AddRecipe /></LoginGuard>
         },
         {
           path: Paths.recipeList,
@@ -52,11 +57,27 @@ const Routes = () => {
         },
         {
           path: `${Paths.rating}/:recipeId`,
-          element: <RatingPage /> 
+          element: <RatingPage />
         },
         {
-          path: `${Paths.chefRecipes}/:chefId`, 
+          path: `${Paths.chefRecipes}/:chefId`,
           element: <ChefRecipes />
+        },
+        {
+          path: Paths.blog,
+          element: <Blog />
+        },
+        {
+          path: Paths.updateRecipe(':id'), // עדכון הנתיב
+          element: <UpdateRecipe />
+        },
+        {
+          path:Paths.chefManagement,
+          element:<ChefManagement/>
+        },
+        {
+          path:Paths.login,
+          element:<Login />
         }
 
       ],

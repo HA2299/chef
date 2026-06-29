@@ -1,4 +1,4 @@
-import StarRating from '../components/StarRating'
+import StarRating from '../components/Recipes/StarRating'
 import { useState } from 'react';
 
 function RatingPage() {

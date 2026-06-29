@@ -20,8 +20,6 @@ interface RegisterModalProps {
 export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
     const navigate = useNavigate();
     const { setUser } = useAuthContext()
-
-
     const handleRegister = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
@@ -30,9 +28,9 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
         const isRegistered = await registerService({ ...data, role: Role.User });
         let user;
         if (isRegistered === 'User registered successfully.') {
-            const userName=data.name;
-            const email=data.email;
-            const userLogin:LoginType={userName:userName, email:email};
+            const userName = data.name;
+            const email = data.email;
+            const userLogin: LoginType = { userName: userName, email: email };
             user = await loginService(userLogin);
 
         }
@@ -45,11 +43,11 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-black/20">
+        <div dir='rtl' className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-black/20">
             <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-md w-full mx-4 relative animate-in fade-in zoom-in duration-200">
                 <button
                     onClick={onClose}
-                    className="absolute top-4 left-4 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                     <X className="w-6 h-6" />
                 </button>

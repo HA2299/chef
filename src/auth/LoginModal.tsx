@@ -1,4 +1,4 @@
-import { type FormEvent } from 'react';
+import { type FormEvent,useState } from 'react';
 import { X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { type LoginType, login as loginService } from '../services/auth.services';
@@ -14,26 +14,31 @@ interface LoginModalProps {
 export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: LoginModalProps) {
   const navigate = useNavigate();
   const { setUser } = useAuthContext();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // הוסף מצב עבור הודעת השגיאה
 
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData.entries()) as LoginType;
     const user = await loginService(data);
-    await setUser(user.user);
-    setSession(`Bearer ${user.token}`);
-    onClose();
-    navigate(`/`);
+    if (user) {
+      await setUser(user.user);
+      setSession(`Bearer ${user.token}`);
+      onClose();
+      navigate(`/`);      
+    } else {
+      setErrorMessage("הכניסה נכשלה, אנא בדוק את פרטי הכניסה שלך."); // הגדר הודעת שגיאה
+    }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-black/20">
+    <div dir='rtl' className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-black/20">
       <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-md w-full mx-4 relative animate-in fade-in zoom-in duration-200">
         <button 
           onClick={onClose} 
-          className="absolute top-4 left-4 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
         >
           <X className="w-6 h-6" />
         </button>
@@ -42,6 +47,8 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
           התחברות
         </h2>
         <p className="text-center text-gray-500 mb-8">ברוכים השבים למתכונים וטעמים</p>
+        
+        {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>} {/* הצגת הודעת השגיאה */}
         
         <form onSubmit={handleLogin} className="space-y-4">
           <div>

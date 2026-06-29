@@ -1,12 +1,22 @@
 import { Video as LucideIcon } from 'lucide-react';
 
+/**
+ * CategoryCardProps interface
+ * 
+ * Defines the properties for the CategoryCard component.
+ */
 interface CategoryCardProps {
-  name: string;
-  icon: typeof LucideIcon;
-  recipeCount: number;
-  color: string;
+  name: string; // The name of the category
+  icon: typeof LucideIcon; // The icon representing the category
+  recipeCount: number; // The number of recipes in this category
+  color: string; // The background color for the category card
 }
 
+/**
+ * CategoryCard Component
+ * 
+ * Displays a card for a recipe category, including an icon, name, and recipe count.
+ */
 export default function CategoryCard({
   name,
   icon: Icon,
@@ -19,14 +29,14 @@ export default function CategoryCard({
 
       <div className="relative flex flex-col items-center text-center space-y-3">
         <div className={`p-4 rounded-2xl bg-gradient-to-br ${color} group-hover:scale-110 transition-transform duration-300`}>
-          <Icon className="w-8 h-8 text-white" />
+          <Icon className="w-8 h-8 text-white" /> {/* Category icon */}
         </div>
 
         <div>
           <h3 className="text-lg font-bold text-gray-800 group-hover:text-orange-500 transition-colors">
-            {name}
+            {name} {/* Category name */}
           </h3>
-          <p className="text-sm text-gray-600 mt-1">{recipeCount} מתכונים</p>
+          <p className="text-sm text-gray-600 mt-1">{recipeCount} מתכונים</p> {/* Number of recipes in the category */}
         </div>
       </div>
     </button>

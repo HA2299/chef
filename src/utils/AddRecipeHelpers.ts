@@ -44,9 +44,11 @@ export const handleSubmit = async (
     selectedCategoryId: number,
     numDoses: number,
     image: File | null, // עדכון סוג הנתון של התמונה
+    chefId:number,
     setErrorMessage?: React.Dispatch<React.SetStateAction<string | null>> // הוספת פרמטר עבור הודעת השגיאה
 ) => {
     event.preventDefault();
+
     const newRecipe = {
         id: 0,
         title,
@@ -57,15 +59,14 @@ export const handleSubmit = async (
         difficultyLevel,
         categoryId: selectedCategoryId,
         category: null,
-        chefId: 1,
+        chefId: chefId,
         chef: null,
         numDoses,
         ingredients: []
     };
 
     try {
-        const token = localStorage.getItem('token');
-        const formData = new FormData(); 
+        const formData = new FormData();
 
         formData.append('Title', title);
         formData.append('Description', description);
@@ -75,20 +76,15 @@ export const handleSubmit = async (
         formData.append('DifficultyLevel', difficultyLevel.toString());
         formData.append('NumDoses', numDoses.toString());
         formData.append('Ingredients', newRecipe.ingredients.toString());
-        formData.append('ChefId',newRecipe.chefId.toString())
-        formData.append('CategoryId',newRecipe.categoryId.toString())
-        
+        formData.append('ChefId', newRecipe.chefId.toString())
+        formData.append('CategoryId', newRecipe.categoryId.toString())
+
         if (image) {
             formData.append('FileImage', image); // הוספת התמונה ל-FormData
         }
         console.log([...formData])
-        console.log(token);
-        
         const recipeResponse = await fetch('https://localhost:7136/api/Recipe', {
             method: 'POST',
-            headers: {
-                'Authorization': `${token}`,
-            },
             body: formData,
         });
 
@@ -99,9 +95,7 @@ export const handleSubmit = async (
 
         const recipeData = await recipeResponse.json();
         const recipeId = recipeData.id;
-        console.log("added");
-        console.log(recipeIngredients);
-        
+
         const ingredientPromises = recipeIngredients.map(async (ingredient) => {
             const recipeIngredient: RecipeIngredientType = {
                 id: 0,

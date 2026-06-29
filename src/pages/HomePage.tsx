@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import About from '../components/Home/About';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { fetchChefs, fetchRecipes, type AppDispatch, type RootState } from '../redux/store';
+import { type AppDispatch, type RootState } from '../redux/store';
+import { fetchChefs } from '../redux/thunks'
+import { fetchRecipes } from '../redux/thunks';
 import TopChefsSection from '../components/Home/TopChefsSection';
 import RecommendedRecipesSection from '../components/Home/RecommendedRecipesSection';
 import CategoriesSection from '../components/Home/CategoriesSection';
@@ -13,7 +15,7 @@ import CategoriesSection from '../components/Home/CategoriesSection';
 const HomePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const chefs = useSelector((state: RootState) => state.chefs);
-  const recipes = useSelector((state: RootState) => state.recipes.recipes)  
+  const recipes = useSelector((state: RootState) => state.recipes.recipes)
 
   const topChefs = [...chefs]
     .sort((a, b) => b.averageRating - a.averageRating)
@@ -30,7 +32,7 @@ const HomePage = () => {
 
   useEffect(() => {
     dispatch(fetchRecipes());
-}, [dispatch]);
+  }, [dispatch]);
 
 
   const navigate = useNavigate();
@@ -54,10 +56,10 @@ const HomePage = () => {
         </button>
       </section>
 
-      <RecommendedRecipesSection topRecipes={topRecipes}/>
-      <CategoriesSection/>
+      <RecommendedRecipesSection topRecipes={topRecipes} />
+      <CategoriesSection />
       <About />
-      <TopChefsSection topChefs={topChefs}/>
+      <TopChefsSection topChefs={topChefs} />
 
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-orange-500 to-red-500 text-white">
         <div className="max-w-4xl mx-auto text-center">

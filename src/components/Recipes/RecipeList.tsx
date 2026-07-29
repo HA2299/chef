@@ -35,7 +35,6 @@ const RecipeList: React.FC = () => {
         if (user) {
             navigate(`/${Paths.recipeDetail(recipeId.toString())}`);
         } else {
-            // שימוש ב-Context הגלובלי במקום ב-State מקומי
             openLogin();
         }
     };
@@ -45,7 +44,6 @@ const RecipeList: React.FC = () => {
             <h1 className="text-5xl font-extrabold text-gray-900 text-center mb-12 shadow-md p-4 rounded-lg bg-gradient-to-r from-orange-400 to-red-500 text-white">
                 המתכונים שלנו
             </h1>
-
             <div dir="rtl" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                 {recipes.map((recipe) => (
                     <RecipeCard

@@ -21,7 +21,6 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { chefDetails, logout } = useAuthContext();
   const isAdmin = chefDetails && chefDetails.user?.role === 'admin'; // Check if the user is an admin
-  console.log('chefDetails:', chefDetails); // Log chef details for debugging
 
   const addRecipe = () => {
     if (chefDetails) {
